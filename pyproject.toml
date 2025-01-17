@@ -1,0 +1,21 @@
+[tool.poetry]
+name = "tg-supabot"
+version = "0.1.0"
+description = "SupaBot for somethings"
+authors = ["hoopengo <hoopengo@yandex.ru>"]
+license = "Apache License 2.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+aiogram = { version = "^3.0.0rc2", allow-prereleases = true }
+pydantic-settings = "^2.0.2"
+betterlogging = "^0.2.1"
+sqlalchemy = { extras = ["asyncio"], version = "^2.0.19" }
+alembic = "^1.11.1"
+asyncpg = "^0.28.0"
+redis = { extras = ["hiredis"], version = "^4.6.0" }
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
