@@ -1,11 +1,9 @@
-from aiogram.types import KeyboardButton, ReplyKeyboardMarkup
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
-menu_kb = ReplyKeyboardMarkup(
-    keyboard=[
+menu_kb = InlineKeyboardMarkup(
+    inline_keyboard=[
         [
-            KeyboardButton(text="Привет из клавиатуры"),
+            InlineKeyboardButton(text="Следить за ценой!", url="t.me/govno_price"),
         ],
     ],
-    is_persistent=True,
-    resize_keyboard=True,
 )

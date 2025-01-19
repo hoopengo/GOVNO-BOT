@@ -3,17 +3,20 @@ import logging
 
 import betterlogging as bl
 from aiogram import Bot, Dispatcher
+from aiogram.client.default import DefaultBotProperties
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.utils.chat_action import ChatActionMiddleware
 
 from bot.config import config
 from bot.handlers import routers_list
 from bot.services import broadcaster
+from bot.services.mcap_editor import update_mcap_loop
 
 
 async def on_startup(bot: Bot):
     await bot.delete_webhook(drop_pending_updates=True)
     await broadcaster.broadcast(bot, config.ADMIN_IDS, "Бот был запущен")
+    await asyncio.create_task(update_mcap_loop(bot))
 
 
 def setup_logging():
@@ -48,7 +51,7 @@ async def main():
 
     storage = MemoryStorage()
 
-    bot = Bot(token=config.TOKEN.get_secret_value(), parse_mode="HTML")
+    bot = Bot(token=config.TOKEN.get_secret_value(), default=DefaultBotProperties(parse_mode="HTML"))
     dp = Dispatcher(storage=storage)
 
     dp.include_routers(*routers_list)

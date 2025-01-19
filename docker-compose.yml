@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   db:
     restart: always
@@ -12,21 +10,6 @@ services:
     volumes:
       - ./data/postgres-data:/var/lib/postgresql/data
 
-  cache:
-    image: redis:7-alpine
-    restart: always
-    env_file:
-      - ./settings/redis.env
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 1m
-      timeout: 10s
-      retries: 3
-      start_period: 5s
-    command: redis-server --save 20 1 --loglevel warning
-    volumes:
-      - ./data/cache:/data
-
   bot:
     build:
       context: .
@@ -35,7 +18,6 @@ services:
     env_file:
       - ./settings/db.env
       - ./settings/bot.env
-      - ./settings/redis.env
     environment:
       POSTGRES_HOST: db
     depends_on:
@@ -44,10 +26,17 @@ services:
     volumes:
       - ./data/logs:/usr/src/app/bot/logs
       - ./src/alembic/versions:/usr/src/app/alembic/versions
-
-volumes:
-  cache:
-    driver: local
+  
+  adminer:
+    image: adminer
+    restart: always
+    env_file:
+      - ./settings/db.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
 
 networks:
   default:
